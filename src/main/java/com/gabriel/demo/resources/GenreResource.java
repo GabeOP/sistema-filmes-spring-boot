@@ -19,7 +19,7 @@ import jakarta.annotation.Resource;
 
 @Resource
 @RestController
-@RequestMapping(value = "/gender")
+@RequestMapping(value = "/genre")
 public class GenreResource {
 
 	@Autowired
@@ -32,9 +32,9 @@ public class GenreResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Genre> saveGender(@RequestBody Genre gender) {
-		service.saveGender(gender);
-		return ResponseEntity.status(HttpStatus.CREATED).body(gender);
+	public ResponseEntity<Genre> saveGenre(@RequestBody Genre genre) {
+		service.saveGenre(genre);
+		return ResponseEntity.status(HttpStatus.CREATED).body(genre);
 	}
 	
 }

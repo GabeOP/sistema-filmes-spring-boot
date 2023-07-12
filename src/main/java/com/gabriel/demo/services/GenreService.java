@@ -21,7 +21,7 @@ public class GenreService {
 		return dto;
 	}
 	
-	public Genre saveGender(Genre gender) {
-		return repository.save(gender);
+	public Genre saveGenre(Genre genre) {
+		return repository.save(genre);
 	}
 }
