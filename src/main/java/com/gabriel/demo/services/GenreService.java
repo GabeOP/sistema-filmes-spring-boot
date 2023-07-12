@@ -21,6 +21,10 @@ public class GenreService {
 		return dto;
 	}
 	
+	public Genre findById(Long id) {
+		return repository.findById(id).get();
+	}
+	
 	public Genre saveGenre(Genre genre) {
 		return repository.save(genre);
 	}

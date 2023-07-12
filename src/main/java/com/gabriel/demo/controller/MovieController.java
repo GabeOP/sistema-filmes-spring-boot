@@ -1,4 +1,4 @@
-package com.gabriel.demo.resources;
+package com.gabriel.demo.controller;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import jakarta.annotation.Resource;
 @Resource
 @RestController
 @RequestMapping("/movie")	
-public class MovieResource {
+public class MovieController {
 	
 	@Autowired
 	MovieService movieService;

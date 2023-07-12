@@ -1,4 +1,4 @@
-package com.gabriel.demo.resources;
+package com.gabriel.demo.controller;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import jakarta.annotation.Resource;
 @Resource
 @RestController
 @RequestMapping(value = "/genre")
-public class GenreResource {
+public class GenreController {
 
 	@Autowired
 	GenreService service;
@@ -29,6 +30,13 @@ public class GenreResource {
 	public ResponseEntity<List<GenreDTO>> findAll() {
 		List<GenreDTO> list = service.findAll();
 		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<GenreDTO> findById(@PathVariable Long id) {
+		Genre entity = service.findById(id);
+		GenreDTO dto = new GenreDTO(entity);
+		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 	
 	@PostMapping

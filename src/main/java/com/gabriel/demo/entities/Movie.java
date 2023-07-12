@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +31,7 @@ public class Movie {
 	@JoinTable(name = "tb_movie_genre",
 	joinColumns = @JoinColumn(name = "movie_id"),
 	inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	@JsonIgnore
 	private Set<Genre> genres  = new HashSet<>();
 	
 	public Movie() {}
