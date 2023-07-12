@@ -37,4 +37,15 @@ public class MovieService {
 		dto.setReleaseYear(body.getReleaseYear());
 		return dto;
 	}
+	
+	public MovieDTO updateMovie(Long id, Movie body) {
+		Movie entity = repository.findById(id).get();
+		entity.setName(body.getName());
+		entity.setRate(body.getRate());
+		entity.setReleaseYear(body.getReleaseYear());
+		entity.setSynopsis(body.getSynopsis());
+		repository.save(entity);
+		MovieDTO dto = new MovieDTO(entity);
+		return dto;
+	}
 }
