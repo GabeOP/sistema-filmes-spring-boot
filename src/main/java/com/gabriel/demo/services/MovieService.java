@@ -20,6 +20,12 @@ public class MovieService {
 		List<MovieDTO> dto = movies.stream().map(x -> new MovieDTO(x)).toList();
 		return dto;
 	}
+	
+	public MovieDTO findById(Long id) {
+		Movie entity = repository.findById(id).get();
+		MovieDTO dto = new MovieDTO(entity);
+		return dto;
+	}
 
 	public MovieDTO saveMovie(Movie body) {
 		repository.save(body);

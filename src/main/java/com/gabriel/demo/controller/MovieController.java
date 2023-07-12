@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,12 @@ public class MovieController {
 	public ResponseEntity<List<MovieDTO>> findAll() {
 		List<MovieDTO> listDto = movieService.findAll();
 		return ResponseEntity.status(HttpStatus.OK).body(listDto);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<MovieDTO> findById(@PathVariable Long id) {
+		MovieDTO dto = movieService.findById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping
