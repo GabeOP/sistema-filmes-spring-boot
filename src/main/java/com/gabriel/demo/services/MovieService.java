@@ -48,4 +48,9 @@ public class MovieService {
 		MovieDTO dto = new MovieDTO(entity);
 		return dto;
 	}
+	
+	public String deleteMovie(Long id) {
+		repository.deleteById(id);
+		return "Movie deleted successfully";
+	}
 }
