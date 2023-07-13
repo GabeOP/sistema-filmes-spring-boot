@@ -1,6 +1,7 @@
 package com.gabriel.demo.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,24 @@ public class MovieService {
 		return dto;
 	}
 	
-	public MovieDTO findById(Long id) {
-		Movie entity = repository.findById(id).get();
-		MovieDTO dto = new MovieDTO(entity);
-		return dto;
+	public Object findById(Long id) {
+		try {
+			Movie entity = repository.findById(id).get();
+			MovieDTO dto = new MovieDTO(entity);
+			return dto;
+		}catch(NoSuchElementException e) {
+			return "User not found.";
+		}
 	}
 
-	public MovieDTO saveMovie(Movie body) {
+	public Object saveMovie(Movie body) {
+		
+		if(repository.existsByName(body.getName())) {
+			return "Film already registered";
+		}
+		
 		repository.save(body);
-		MovieDTO dto = new MovieDTO();
+		MovieDTO dto = new MovieDTO(body);
 		
 		dto.setName(body.getName());
 		dto.setRate(body.getRate());

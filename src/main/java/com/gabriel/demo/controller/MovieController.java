@@ -35,16 +35,22 @@ public class MovieController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<MovieDTO> findById(@PathVariable Long id) {
-		MovieDTO dto = movieService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(dto);
+	public ResponseEntity<Object> findById(@PathVariable Long id) {
+		Object response = movieService.findById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PostMapping
-	public ResponseEntity<MovieDTO> saveMovie(@RequestBody Movie body) {
-		movieService.saveMovie(body);
-		MovieDTO dto = new MovieDTO(body);
-		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+	public ResponseEntity<Object> saveMovie(@RequestBody Movie body) {
+		Object[] verificaCampos = {body.getName(), body.getRate(), body.getReleaseYear(), body.getSynopsis()};
+		for(Object campos : verificaCampos) {
+			if(campos == null) {
+				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+						.body("[ERRO] Complete todos os campos.");
+			}
+		}
+		Object response = movieService.saveMovie(body);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@PutMapping("/{id}")
