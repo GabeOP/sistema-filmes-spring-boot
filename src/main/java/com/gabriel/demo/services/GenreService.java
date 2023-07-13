@@ -28,4 +28,12 @@ public class GenreService {
 	public Genre saveGenre(Genre genre) {
 		return repository.save(genre);
 	}
+	
+	public GenreDTO updateGenre(Long id, Genre genre) {
+		Genre entity = repository.findById(id).get();
+		entity.setName(genre.getName());
+		repository.save(entity);
+		GenreDTO dto = new GenreDTO(entity);
+		return dto;
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,12 @@ public class GenreController {
 	public ResponseEntity<Genre> saveGenre(@RequestBody Genre genre) {
 		service.saveGenre(genre);
 		return ResponseEntity.status(HttpStatus.CREATED).body(genre);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<GenreDTO> updateGenre(@PathVariable Long id, @RequestBody Genre body) {
+		GenreDTO genreDto = service.updateGenre(id, body);
+		return ResponseEntity.status(HttpStatus.OK).body(genreDto);
 	}
 	
 }
