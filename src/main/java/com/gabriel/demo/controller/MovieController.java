@@ -37,6 +37,10 @@ public class MovieController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> findById(@PathVariable Long id) {
 		Object response = movieService.findById(id);
+		
+		if(response.equals("Movie not found.")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
@@ -46,7 +50,7 @@ public class MovieController {
 		for(Object campos : verificaCampos) {
 			if(campos == null) {
 				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-						.body("[ERRO] Complete todos os campos.");
+						.body("[ERROR] Complete all fields.");
 			}
 		}
 		Object response = movieService.saveMovie(body);
@@ -54,14 +58,20 @@ public class MovieController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<MovieDTO> updateMovie(@PathVariable Long id, @RequestBody Movie body) {
-		MovieDTO dto = movieService.updateMovie(id, body);
-		return ResponseEntity.status(HttpStatus.OK).body(dto);
+	public ResponseEntity<Object> updateMovie(@PathVariable Long id, @RequestBody Movie body) {
+		Object response = movieService.updateMovie(id, body);
+		if(response.equals("Movie not found.")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
-		String response = movieService.deleteMovie(id);
+	public ResponseEntity<Object> deleteMovie(@PathVariable Long id) {
+		Object response = movieService.deleteMovie(id);
+		if(response.equals("Movie not found.")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

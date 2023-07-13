@@ -28,14 +28,14 @@ public class MovieService {
 			MovieDTO dto = new MovieDTO(entity);
 			return dto;
 		}catch(NoSuchElementException e) {
-			return "User not found.";
+			return "Movie not found.";
 		}
 	}
 
 	public Object saveMovie(Movie body) {
 		
 		if(repository.existsByName(body.getName())) {
-			return "Film already registered";
+			return "Movie already registered";
 		}
 		
 		repository.save(body);
@@ -48,19 +48,28 @@ public class MovieService {
 		return dto;
 	}
 	
-	public MovieDTO updateMovie(Long id, Movie body) {
-		Movie entity = repository.findById(id).get();
-		entity.setName(body.getName());
-		entity.setRate(body.getRate());
-		entity.setReleaseYear(body.getReleaseYear());
-		entity.setSynopsis(body.getSynopsis());
-		repository.save(entity);
-		MovieDTO dto = new MovieDTO(entity);
-		return dto;
+	public Object updateMovie(Long id, Movie body) {
+		try {
+			Movie entity = repository.findById(id).get();
+			entity.setName(body.getName());
+			entity.setRate(body.getRate());
+			entity.setReleaseYear(body.getReleaseYear());
+			entity.setSynopsis(body.getSynopsis());
+			repository.save(entity);
+			MovieDTO dto = new MovieDTO(entity);
+			return dto;
+		}catch(NoSuchElementException e) {
+			return "Movie not found.";
+		}
 	}
 	
-	public String deleteMovie(Long id) {
-		repository.deleteById(id);
-		return "Movie deleted successfully";
+	public Object deleteMovie(Long id) {
+		try {
+			repository.findById(id).get();
+			repository.deleteById(id);
+			return "Movie deleted successfully";
+		}catch(NoSuchElementException e) {
+			return "Movie not found.";
+		}
 	}
 }
