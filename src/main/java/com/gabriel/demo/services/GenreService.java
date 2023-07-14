@@ -25,8 +25,9 @@ public class GenreService {
 		return repository.findById(id).get();
 	}
 	
-	public Genre saveGenre(Genre genre) {
-		return repository.save(genre);
+	public GenreDTO saveGenre(Genre genre) {
+		Genre entity = repository.save(genre);
+		return new GenreDTO(entity);
 	}
 	
 	public GenreDTO updateGenre(Long id, Genre genre) {
