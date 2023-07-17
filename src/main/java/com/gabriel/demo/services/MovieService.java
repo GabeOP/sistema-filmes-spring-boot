@@ -1,9 +1,10 @@
 package com.gabriel.demo.services;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.demo.dto.MovieDTO;
@@ -16,10 +17,9 @@ public class MovieService {
 	@Autowired
 	MovieRepository repository;
 	
-	public List<MovieDTO> findAll() {
-		List<Movie> movies = repository.findAll();
-		List<MovieDTO> dto = movies.stream().map(x -> new MovieDTO(x)).toList();
-		return dto;
+	public Page<MovieDTO> findAllPaged(PageRequest pageRequest) {
+		Page<Movie> movies = repository.findAll(pageRequest);
+		return movies.map(x -> new MovieDTO(x));
 	}
 	
 	public Object findById(Long id) {
