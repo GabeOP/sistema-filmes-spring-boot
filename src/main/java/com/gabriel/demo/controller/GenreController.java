@@ -1,10 +1,12 @@
 package com.gabriel.demo.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,22 +36,50 @@ public class GenreController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<GenreDTO> findById(@PathVariable Long id) {
-		Genre entity = service.findById(id);
-		GenreDTO dto = new GenreDTO(entity);
-		return ResponseEntity.status(HttpStatus.OK).body(dto);
+	public ResponseEntity<Object> findById(@PathVariable Long id) {
+		try {
+			Genre entity = service.findById(id);
+			GenreDTO dto = new GenreDTO(entity);
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
+		}catch(NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Genre not found.");
+		}
 	}
 	
 	@PostMapping
-	public ResponseEntity<GenreDTO> saveGenre(@RequestBody Genre genre) {
+	public ResponseEntity<Object> saveGenre(@RequestBody Genre genre) {
+		Object[] verificaCampos = {genre.getName()};
+		
+		for(Object campos : verificaCampos) {
+			if(campos == null) {
+				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+						.body("[ERROR] Complete all fields.");
+			}
+		}
 		GenreDTO response = service.saveGenre(genre);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<GenreDTO> updateGenre(@PathVariable Long id, @RequestBody Genre body) {
-		GenreDTO genreDto = service.updateGenre(id, body);
-		return ResponseEntity.status(HttpStatus.OK).body(genreDto);
+	public ResponseEntity<Object> updateGenre(@PathVariable Long id, @RequestBody Genre body) {
+		Object response = service.updateGenre(id, body);
+		
+		if(response.equals("Genre not found.")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleteGenre(@PathVariable Long id) {
+		
+		Object response = service.deleteGenre(id);
+		
+		if(response.equals("Genre not found")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 }
