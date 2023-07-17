@@ -19,13 +19,13 @@ public class MovieService {
 	
 	public Page<MovieDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Movie> movies = repository.findAll(pageRequest);
-		return movies.map(x -> new MovieDTO(x));
+		return movies.map(x ->  new MovieDTO(x));
 	}
 	
 	public Object findById(Long id) {
 		try {
 			Movie entity = repository.findById(id).get();
-			MovieDTO dto = new MovieDTO(entity);
+			MovieDTO dto = new MovieDTO(entity, entity.getGenres());
 			return dto;
 		}catch(NoSuchElementException e) {
 			return "Movie not found.";
@@ -40,11 +40,7 @@ public class MovieService {
 		
 		repository.save(body);
 		MovieDTO dto = new MovieDTO(body);
-		
-		dto.setName(body.getName());
-		dto.setRate(body.getRate());
-		dto.setSynopsis(body.getSynopsis());
-		dto.setReleaseYear(body.getReleaseYear());
+ 
 		return dto;
 	}
 	

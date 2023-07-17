@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "tb_movie")
 public class Movie {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,7 +32,7 @@ public class Movie {
 	joinColumns = @JoinColumn(name = "movie_id"),
 	inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	@JsonIgnore
-	private Set<Genre> genres  = new HashSet<>();
+	Set<Genre> genres  = new HashSet<>();
 	
 	public Movie() {}
 

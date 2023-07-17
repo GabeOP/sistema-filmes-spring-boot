@@ -1,34 +1,42 @@
 package com.gabriel.demo.dto;
 
-import java.util.HashSet;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.gabriel.demo.entities.Genre;
 import com.gabriel.demo.entities.Movie;
 
-public class MovieDTO {
+public class MovieDTO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private String name;
 	private String synopsis;
 	private Integer releaseYear;
 	private Double rate;
-	private Set<Genre> genres  = new HashSet<>();
+	private List<GenreDTO> genres = new ArrayList<>();
 	
 	public MovieDTO() {}
 
+	public MovieDTO(String name, String synopsis, Integer year, Double rate) {
+		this.name = name;
+		this.synopsis = synopsis;
+		this.releaseYear = year;
+		this.rate = rate;
+	}
+	
 	public MovieDTO(Movie entity) {
 		name = entity.getName();
 		synopsis = entity.getSynopsis();
 		releaseYear = entity.getReleaseYear();
 		rate = entity.getRate();
-		genres = entity.getGenres();
 	}
-	public MovieDTO(String name, String synopsis, Integer year, Double rate, Set<Genre> genres) {
-		super();
-		this.name = name;
-		this.synopsis = synopsis;
-		this.releaseYear = year;
-		this.rate = rate;
-		this.genres = genres;
+	
+	public MovieDTO(Movie entity, Set<Genre> genres) {
+		this(entity);
+		genres.forEach(x -> this.genres.add(new GenreDTO(x)));
 	}
 
 	public String getName() {
@@ -63,8 +71,12 @@ public class MovieDTO {
 		this.rate = rate;
 	}
 
-	public Set<Genre> getGenres() {
+	public List<GenreDTO> getGenres() {
 		return genres;
+	}
+
+	public void setGenres(List<GenreDTO> genres) {
+		this.genres = genres;
 	}
 
 	
