@@ -1,7 +1,5 @@
 package com.gabriel.demo.services;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.gabriel.demo.dto.MovieDTO;
 import com.gabriel.demo.model.entities.Movie;
+import com.gabriel.demo.model.exception.MovieNotFoundException;
 import com.gabriel.demo.repositories.MovieRepository;
 
 @Service
@@ -23,13 +22,12 @@ public class MovieService {
 	}
 	
 	public Object findById(Long id) {
-		try {
-			Movie entity = repository.findById(id).get();
-			MovieDTO dto = new MovieDTO(entity, entity.getGenres());
-			return dto;
-		}catch(NoSuchElementException e) {
-			return "Movie not found.";
-		}
+		repository.existsById(id);
+		
+		Movie entity = repository.findById(id)
+				.orElseThrow(() -> new MovieNotFoundException("[ERROR] Movie ID not found."));
+		
+		return new MovieDTO(entity, entity.getGenres());
 	}
 
 	public Object saveMovie(Movie body) {
@@ -45,8 +43,10 @@ public class MovieService {
 	}
 	
 	public Object updateMovie(Long id, Movie body) {
-		try {
-			Movie entity = repository.findById(id).get();
+		
+			Movie entity = repository.findById(id)
+					.orElseThrow(() -> new MovieNotFoundException("[ERROR] Movie ID not found."));
+			
 			entity.setName(body.getName());
 			entity.setRate(body.getRate());
 			entity.setReleaseYear(body.getReleaseYear());
@@ -54,18 +54,12 @@ public class MovieService {
 			repository.save(entity);
 			MovieDTO dto = new MovieDTO(entity);
 			return dto;
-		}catch(NoSuchElementException e) {
-			return "Movie not found.";
-		}
 	}
 	
-	public Object deleteMovie(Long id) {
-		try {
-			repository.findById(id).get();
-			repository.deleteById(id);
-			return "Movie deleted successfully";
-		}catch(NoSuchElementException e) {
-			return "Movie not found.";
+	public void deleteMovie(Long id) {
+		if(!repository.existsById(id)) {
+			throw new MovieNotFoundException("[ERROR] Movie ID not found.");
 		}
+			repository.deleteById(id);
 	}
 }

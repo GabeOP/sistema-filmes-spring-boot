@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.demo.dto.MovieDTO;
 import com.gabriel.demo.model.entities.Movie;
+import com.gabriel.demo.model.exception.MovieNotFoundException;
 import com.gabriel.demo.services.MovieService;
 
 import jakarta.annotation.Resource;
@@ -47,12 +48,12 @@ public class MovieController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> findById(@PathVariable Long id) {
-		Object response = movieService.findById(id);
-		
-		if(response.equals("Movie not found.")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		try {
+			Object response = movieService.findById(id);
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		}catch(MovieNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PostMapping
@@ -70,19 +71,21 @@ public class MovieController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> updateMovie(@PathVariable Long id, @RequestBody Movie body) {
-		Object response = movieService.updateMovie(id, body);
-		if(response.equals("Movie not found.")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		try {
+			Object response = movieService.updateMovie(id, body);
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		}catch(MovieNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteMovie(@PathVariable Long id) {
-		Object response = movieService.deleteMovie(id);
-		if(response.equals("Movie not found.")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		try {
+			movieService.deleteMovie(id);	
+			return ResponseEntity.status(HttpStatus.OK).body("Movie deleted successfully");
+		}catch(MovieNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }
