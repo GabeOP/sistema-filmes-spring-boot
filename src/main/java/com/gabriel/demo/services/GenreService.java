@@ -1,13 +1,13 @@
 package com.gabriel.demo.services;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.demo.dto.GenreDTO;
 import com.gabriel.demo.model.entities.Genre;
+import com.gabriel.demo.model.exception.GenreNotFoundException;
 import com.gabriel.demo.repositories.GenreRepository;
 
 @Service
@@ -23,7 +23,7 @@ public class GenreService {
 	}
 	
 	public Genre findById(Long id) {
-		return repository.findById(id).get();
+		return repository.findById(id).orElseThrow(() -> new GenreNotFoundException("[ERROR] Genre ID not found."));
 	}
 	
 	public GenreDTO saveGenre(Genre genre) {
@@ -32,22 +32,18 @@ public class GenreService {
 	}
 	
 	public Object updateGenre(Long id, Genre genre) {
-		try {
-			Genre entity = repository.findById(id).get();
+			Genre entity = repository.findById(id).orElseThrow(() -> new GenreNotFoundException("[ERROR] Genre ID not found."));
+
 			entity.setName(genre.getName());
 			repository.save(entity);
 			GenreDTO dto = new GenreDTO(entity);
 			return dto;
-		}catch(NoSuchElementException e) {
-			return "Genre not found.";
-		}
 	}
 	
 	public void deleteGenre(Long id) {
 		if(!repository.existsById(id)) {
-			throw new NoSuchElementException("Genre not found.");
+			throw new GenreNotFoundException("[ERROR] Genre ID not found.");
 		}
 		repository.deleteById(id);
 	}
-	
 }

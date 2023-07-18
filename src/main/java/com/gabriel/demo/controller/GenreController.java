@@ -1,7 +1,6 @@
 package com.gabriel.demo.controller;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.demo.dto.GenreDTO;
 import com.gabriel.demo.model.entities.Genre;
+import com.gabriel.demo.model.exception.GenreNotFoundException;
 import com.gabriel.demo.services.GenreService;
 
 import jakarta.annotation.Resource;
@@ -37,12 +37,13 @@ public class GenreController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> findById(@PathVariable Long id) {
+		
 		try {
 			Genre entity = service.findById(id);
 			GenreDTO dto = new GenreDTO(entity);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
-		}catch(NoSuchElementException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Genre not found.");
+		}catch(GenreNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
 		}
 	}
 	
@@ -58,17 +59,17 @@ public class GenreController {
 		}
 		GenreDTO response = service.saveGenre(genre);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> updateGenre(@PathVariable Long id, @RequestBody Genre body) {
-		Object response = service.updateGenre(id, body);
 		
-		if(response.equals("Genre not found.")) {
+		try {
+			Object response = service.updateGenre(id, body);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}catch(GenreNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -76,11 +77,9 @@ public class GenreController {
 		
 		try {
 			service.deleteGenre(id);
-			return ResponseEntity.status(HttpStatus.OK).body("Sucesso");
-		}catch(NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.OK).body("Genre deleted successfully.");
+		}catch(GenreNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		
 	}
-	
 }
