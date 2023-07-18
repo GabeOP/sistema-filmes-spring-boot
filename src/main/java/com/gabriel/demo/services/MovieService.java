@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.demo.dto.MovieDTO;
-import com.gabriel.demo.entities.Movie;
+import com.gabriel.demo.model.entities.Movie;
 import com.gabriel.demo.repositories.MovieRepository;
 
 @Service

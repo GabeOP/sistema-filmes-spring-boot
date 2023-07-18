@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.gabriel.demo.entities.Genre;
-import com.gabriel.demo.entities.Movie;
+import com.gabriel.demo.model.entities.Genre;
+import com.gabriel.demo.model.entities.Movie;
 
 public class MovieDTO implements Serializable {
 	

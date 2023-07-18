@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.demo.dto.MovieDTO;
-import com.gabriel.demo.entities.Movie;
+import com.gabriel.demo.model.entities.Movie;
 import com.gabriel.demo.services.MovieService;
 
 import jakarta.annotation.Resource;

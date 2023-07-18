@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.demo.dto.GenreDTO;
-import com.gabriel.demo.entities.Genre;
+import com.gabriel.demo.model.entities.Genre;
 import com.gabriel.demo.repositories.GenreRepository;
 
 @Service
@@ -43,15 +43,11 @@ public class GenreService {
 		}
 	}
 	
-	public Object deleteGenre(Long id) {
-		try {
-			repository.findById(id).get();
-			repository.deleteById(id);
-			return "Genre deleted successfully";
-		}catch(NoSuchElementException e) {
-			return "Genre not found.";
-		}catch(Exception e) {
-			return e.getMessage();
+	public void deleteGenre(Long id) {
+		if(!repository.existsById(id)) {
+			throw new NoSuchElementException("Genre not found.");
 		}
+		repository.deleteById(id);
 	}
+	
 }

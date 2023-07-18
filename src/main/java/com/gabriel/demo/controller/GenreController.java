@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.demo.dto.GenreDTO;
-import com.gabriel.demo.entities.Genre;
+import com.gabriel.demo.model.entities.Genre;
 import com.gabriel.demo.services.GenreService;
 
 import jakarta.annotation.Resource;
@@ -74,12 +74,13 @@ public class GenreController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteGenre(@PathVariable Long id) {
 		
-		Object response = service.deleteGenre(id);
-		
-		if(response.equals("Genre not found")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		try {
+			service.deleteGenre(id);
+			return ResponseEntity.status(HttpStatus.OK).body("Sucesso");
+		}catch(NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
 	}
 	
 }

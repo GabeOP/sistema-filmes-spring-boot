@@ -1,6 +1,6 @@
 package com.gabriel.demo.dto;
 
-import com.gabriel.demo.entities.Genre;
+import com.gabriel.demo.model.entities.Genre;
 
 public class GenreDTO {
 	private String name;
