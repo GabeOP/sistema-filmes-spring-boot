@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.demo.dto.MovieDTO;
-import com.gabriel.demo.model.entities.Movie;
 import com.gabriel.demo.services.MovieService;
 
 import jakarta.annotation.Resource;
@@ -44,25 +43,25 @@ public class MovieController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> findById(@PathVariable Long id) {
-		Object response = movieService.findById(id);
+	public ResponseEntity<MovieDTO> findById(@PathVariable Long id) {
+		MovieDTO response = movieService.findById(id);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> saveMovie(@RequestBody Movie body) {
-		Object response = movieService.saveMovie(body);
+	public ResponseEntity<MovieDTO> saveMovie(@RequestBody MovieDTO body) {
+		MovieDTO response = movieService.saveMovie(body);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateMovie(@PathVariable Long id, @RequestBody Movie body) {
-		Object response = movieService.updateMovie(id, body);
+	public ResponseEntity<MovieDTO> updateMovie(@PathVariable Long id, @RequestBody MovieDTO body) {
+		MovieDTO response = movieService.updateMovie(id, body);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteMovie(@PathVariable Long id) {
+	public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
 		movieService.deleteMovie(id);
 		return ResponseEntity.status(HttpStatus.OK).body("Movie deleted successfully");
 	}

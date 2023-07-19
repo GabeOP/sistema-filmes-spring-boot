@@ -1,5 +1,6 @@
 package com.gabriel.demo.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +18,15 @@ public class MovieService {
 	@Autowired
 	MovieRepository repository;
 	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	public Page<MovieDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Movie> movies = repository.findAll(pageRequest);
 		return movies.map(x ->  new MovieDTO(x));
 	}
 	
-	public Object findById(Long id) {
+	public MovieDTO findById(Long id) {
 		repository.existsById(id);
 		
 		Movie entity = repository.findById(id)
@@ -31,17 +35,14 @@ public class MovieService {
 		return new MovieDTO(entity, entity.getGenres());
 	}
 
-	public Object saveMovie(Movie body) {
-		
+	public MovieDTO saveMovie(MovieDTO body) {
 		CheckIfThereEmptyFields(body);
-		repository.save(body);
-		MovieDTO dto = new MovieDTO(body);
- 
-		return dto;
-		
+		Movie entity = modelMapper.map(body, Movie.class);
+		repository.save(entity);
+		return new MovieDTO(entity);
 	}
 	
-	public Object updateMovie(Long id, Movie body) {
+	public MovieDTO updateMovie(Long id, MovieDTO body) {
 
 		CheckIfThereEmptyFields(body);
 
@@ -54,8 +55,7 @@ public class MovieService {
 		entity.setSynopsis(body.getSynopsis());
 
 		repository.save(entity);
-		MovieDTO dto = new MovieDTO(entity);
-		return dto;
+		return new MovieDTO(entity);
 	}
 	
 	public void deleteMovie(Long id) {
@@ -66,7 +66,7 @@ public class MovieService {
 	}
 	
 	//Função para verificação de todos os campos vindos do controller.
-	private void CheckIfThereEmptyFields(Movie body) {
+	private void CheckIfThereEmptyFields(MovieDTO body) {
 		Object[] verificaCampos = {body.getName(), body.getRate(), body.getReleaseYear(), body.getSynopsis()};
 		for(Object campos : verificaCampos) {
 			if(campos == null) {
