@@ -2,6 +2,7 @@ package com.gabriel.demo.services;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class GenreService {
 
 	@Autowired
 	GenreRepository repository;
+	
+	@Autowired
+	ModelMapper modelMapper;
 
 	public List<GenreDTO> findAll() {
 		List<Genre> genres = repository.findAll();
@@ -23,25 +27,27 @@ public class GenreService {
 		return dto;
 	}
 
-	public Genre findById(Long id) {
-		return repository.findById(id).orElseThrow(() -> new GenreNotFoundException("[ERROR] Genre ID not found."));
-	}
-
-	public GenreDTO saveGenre(Genre genre) {
-		CheckIfThereEmptyFields(genre);
-		Genre entity = repository.save(genre);
+	public GenreDTO findById(Long id) {
+		Genre entity = repository.findById(id)
+				.orElseThrow(() -> new GenreNotFoundException("[ERROR] Genre ID not found."));
 		return new GenreDTO(entity);
 	}
 
-	public Object updateGenre(Long id, Genre genre) {
-		CheckIfThereEmptyFields(genre);
+	public GenreDTO saveGenre(GenreDTO dto) {
+		CheckIfThereEmptyFields(dto);
+		Genre entity = modelMapper.map(dto, Genre.class);
+		repository.save(entity);
+		return new GenreDTO(entity);
+	}
+
+	public GenreDTO updateGenre(Long id, GenreDTO dto) {
+		CheckIfThereEmptyFields(dto);
 		Genre entity = repository.findById(id)
 				.orElseThrow(() -> new GenreNotFoundException("[ERROR] Genre ID not found."));
 
-		entity.setName(genre.getName());
+		entity.setName(dto.getName());
 		repository.save(entity);
-		GenreDTO dto = new GenreDTO(entity);
-		return dto;
+		return new GenreDTO(entity);
 	}
 
 	public void deleteGenre(Long id) {
@@ -52,7 +58,7 @@ public class GenreService {
 	}
 
 	// Função para verificação de todos os campos vindos do controller.
-	private void CheckIfThereEmptyFields(Genre body) {
+	private void CheckIfThereEmptyFields(GenreDTO body) {
 		Object[] verificaCampos = { body.getName() };
 
 		for (Object campos : verificaCampos) {

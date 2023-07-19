@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.demo.dto.GenreDTO;
-import com.gabriel.demo.model.entities.Genre;
 import com.gabriel.demo.services.GenreService;
 
 import jakarta.annotation.Resource;
@@ -35,21 +34,20 @@ public class GenreController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> findById(@PathVariable Long id) {
-		Genre entity = service.findById(id);
-		GenreDTO dto = new GenreDTO(entity);
+	public ResponseEntity<GenreDTO> findById(@PathVariable Long id) {
+		GenreDTO dto = service.findById(id);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> saveGenre(@RequestBody Genre genre) {
+	public ResponseEntity<GenreDTO> saveGenre(@RequestBody GenreDTO genre) {
 		GenreDTO response = service.saveGenre(genre);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateGenre(@PathVariable Long id, @RequestBody Genre body) {
-		Object response = service.updateGenre(id, body);
+	public ResponseEntity<GenreDTO> updateGenre(@PathVariable Long id, @RequestBody GenreDTO body) {
+		GenreDTO response = service.updateGenre(id, body);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 	}
 
