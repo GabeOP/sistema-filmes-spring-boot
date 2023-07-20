@@ -8,13 +8,22 @@ import java.util.Set;
 import com.gabriel.demo.model.entities.Genre;
 import com.gabriel.demo.model.entities.Movie;
 
+import jakarta.validation.constraints.NotNull;
+
 public class MovieDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull
 	private String name;
+	
+	@NotNull
 	private String synopsis;
+	
+	@NotNull
 	private Integer releaseYear;
+	
+	@NotNull
 	private Double rate;
 	private List<GenreDTO> genres = new ArrayList<>();
 	

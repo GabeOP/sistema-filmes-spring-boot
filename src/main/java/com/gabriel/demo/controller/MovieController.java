@@ -20,6 +20,7 @@ import com.gabriel.demo.dto.MovieDTO;
 import com.gabriel.demo.services.MovieService;
 
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 @Resource
 @RestController
@@ -49,13 +50,13 @@ public class MovieController {
 	}
 
 	@PostMapping
-	public ResponseEntity<MovieDTO> saveMovie(@RequestBody MovieDTO body) {
+	public ResponseEntity<MovieDTO> saveMovie(@Valid @RequestBody MovieDTO body) {
 		MovieDTO response = movieService.saveMovie(body);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<MovieDTO> updateMovie(@PathVariable Long id, @RequestBody MovieDTO body) {
+	public ResponseEntity<MovieDTO> updateMovie(@PathVariable Long id, @Valid @RequestBody MovieDTO body) {
 		MovieDTO response = movieService.updateMovie(id, body);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}

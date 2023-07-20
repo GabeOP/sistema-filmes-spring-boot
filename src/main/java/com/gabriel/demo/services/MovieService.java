@@ -36,15 +36,12 @@ public class MovieService {
 	}
 
 	public MovieDTO saveMovie(MovieDTO body) {
-		CheckIfThereEmptyFields(body);
 		Movie entity = modelMapper.map(body, Movie.class);
 		repository.save(entity);
 		return new MovieDTO(entity);
 	}
 	
 	public MovieDTO updateMovie(Long id, MovieDTO body) {
-
-		CheckIfThereEmptyFields(body);
 
 		Movie entity = repository.findById(id)
 				.orElseThrow(() -> new MovieNotFoundException("[ERROR] Movie ID not found."));
@@ -63,15 +60,5 @@ public class MovieService {
 			throw new MovieNotFoundException("[ERROR] Movie ID not found.");
 		}
 			repository.deleteById(id);
-	}
-	
-	//Função para verificação de todos os campos vindos do controller.
-	private void CheckIfThereEmptyFields(MovieDTO body) {
-		Object[] verificaCampos = {body.getName(), body.getRate(), body.getReleaseYear(), body.getSynopsis()};
-		for(Object campos : verificaCampos) {
-			if(campos == null) {
-				throw new EmptyFieldException("[ERROR] Complete all fields");
-			}
-		}
 	}
 }
