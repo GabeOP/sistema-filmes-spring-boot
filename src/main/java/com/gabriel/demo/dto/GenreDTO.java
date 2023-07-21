@@ -2,7 +2,11 @@ package com.gabriel.demo.dto;
 
 import com.gabriel.demo.model.entities.Genre;
 
+import jakarta.validation.constraints.NotNull;
+
 public class GenreDTO {
+	
+	@NotNull
 	private String name;
 	
 	public GenreDTO() {}

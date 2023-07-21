@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.gabriel.demo.dto.GenreDTO;
 import com.gabriel.demo.model.entities.Genre;
-import com.gabriel.demo.model.exception.EmptyFieldException;
 import com.gabriel.demo.model.exception.GenreNotFoundException;
 import com.gabriel.demo.repositories.GenreRepository;
 
@@ -34,14 +33,12 @@ public class GenreService {
 	}
 
 	public GenreDTO saveGenre(GenreDTO dto) {
-		CheckIfThereEmptyFields(dto);
 		Genre entity = modelMapper.map(dto, Genre.class);
 		repository.save(entity);
 		return new GenreDTO(entity);
 	}
 
 	public GenreDTO updateGenre(Long id, GenreDTO dto) {
-		CheckIfThereEmptyFields(dto);
 		Genre entity = repository.findById(id)
 				.orElseThrow(() -> new GenreNotFoundException("[ERROR] Genre ID not found."));
 
@@ -55,16 +52,5 @@ public class GenreService {
 			throw new GenreNotFoundException("[ERROR] Genre ID not found.");
 		}
 		repository.deleteById(id);
-	}
-
-	// Função para verificação de todos os campos vindos do controller.
-	private void CheckIfThereEmptyFields(GenreDTO body) {
-		Object[] verificaCampos = { body.getName() };
-
-		for (Object campos : verificaCampos) {
-			if (campos == null) {
-				throw new EmptyFieldException("[ERROR] Complete all fields");
-			}
-		}
 	}
 }

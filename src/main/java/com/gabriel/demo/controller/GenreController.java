@@ -18,6 +18,7 @@ import com.gabriel.demo.dto.GenreDTO;
 import com.gabriel.demo.services.GenreService;
 
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 @Resource
 @RestController
@@ -40,7 +41,7 @@ public class GenreController {
 	}
 
 	@PostMapping
-	public ResponseEntity<GenreDTO> saveGenre(@RequestBody GenreDTO genre) {
+	public ResponseEntity<GenreDTO> saveGenre(@Valid @RequestBody GenreDTO genre) {
 		GenreDTO response = service.saveGenre(genre);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
